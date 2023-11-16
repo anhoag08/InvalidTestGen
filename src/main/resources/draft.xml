@@ -1,0 +1,26 @@
+<LogicExpressionOfActions>
+    <type>and</type>
+    <LogicExpressionOfActions>
+        <type>Input Text</type>
+        <locator>a</locator>
+        <text>a</text>
+    </LogicExpressionOfActions>
+    <LogicExpressionOfActions>
+        <type>Input Text</type>
+        <locator>b</locator>
+        <text>b</text>
+    </LogicExpressionOfActions>
+    <LogicExpressionOfActions>
+        <type>Input Text</type>
+        <locator>b</locator>
+        <text>b</text>
+    </LogicExpressionOfActions>
+    <LogicExpressionOfActions>
+        <type>Click Element</type>
+        <locator>d</locator>
+    </LogicExpressionOfActions>
+    <LogicExpressionOfActions>
+        <type>Click Element</type>
+        <locator>d</locator>
+    </LogicExpressionOfActions>
+</LogicExpressionOfActions>

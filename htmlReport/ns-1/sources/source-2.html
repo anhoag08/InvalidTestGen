@@ -1,0 +1,385 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > ReadXmlDomParserLoop</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.example</a>
+</div>
+
+<h1>Coverage Summary for Class: ReadXmlDomParserLoop (org.example)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ReadXmlDomParserLoop</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    35.7%
+  </span>
+  <span class="absValue">
+    (5/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    27.2%
+  </span>
+  <span class="absValue">
+    (44/162)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example;
+&nbsp;
+&nbsp;import com.opencsv.CSVReader;
+&nbsp;import org.example.objects.ClickElement;
+&nbsp;import org.example.objects.Expression;
+&nbsp;import org.example.objects.InputText;
+&nbsp;import org.w3c.dom.*;
+&nbsp;import org.xml.sax.SAXException;
+&nbsp;
+&nbsp;import javax.xml.parsers.DocumentBuilder;
+&nbsp;import javax.xml.parsers.DocumentBuilderFactory;
+&nbsp;import javax.xml.parsers.ParserConfigurationException;
+&nbsp;import java.io.FileInputStream;
+&nbsp;import java.io.FileReader;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.InputStream;
+&nbsp;import java.util.*;
+&nbsp;import java.util.regex.Matcher;
+&nbsp;import java.util.regex.Pattern;
+&nbsp;
+&nbsp;import static org.example.JavaHttpClient.logicParse;
+&nbsp;
+<b class="fc">&nbsp;public class ReadXmlDomParserLoop {</b>
+<b class="fc">&nbsp;    static Dictionary&lt;String, Vector&lt;Vector&lt;String&gt;&gt;&gt; lineDict = new Hashtable&lt;&gt;();</b>
+<b class="fc">&nbsp;    static Vector&lt;Vector&lt;String&gt;&gt; invalidDict = new Vector&lt;&gt;();</b>
+<b class="fc">&nbsp;    public static Vector&lt;String&gt; temp = new Vector&lt;&gt;();</b>
+&nbsp;
+<b class="fc">&nbsp;    static HashMap&lt;String, InputText&gt; inputTextMap = new HashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;    static HashMap&lt;String, ClickElement&gt; clickElementMap = new HashMap&lt;&gt;();</b>
+&nbsp;
+&nbsp;    public static void main(String[] args) {
+<b class="nc">&nbsp;        System.out.println(createDataMap(&quot;src/main/resources/data_thinktester.csv&quot;));</b>
+&nbsp;
+&nbsp;        // Instantiate the Factory
+<b class="nc">&nbsp;        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();</b>
+&nbsp;
+<b class="nc">&nbsp;        try (InputStream is = new FileInputStream(&quot;src/main/resources/outline_demoqa.xml&quot;)) {</b>
+&nbsp;
+&nbsp;            // parse XML file
+<b class="nc">&nbsp;            DocumentBuilder db = dbf.newDocumentBuilder();</b>
+&nbsp;
+&nbsp;            // read from a project&#39;s resources folder
+<b class="nc">&nbsp;            Document doc = db.parse(is);</b>
+&nbsp;
+<b class="nc">&nbsp;            if (doc.hasChildNodes()) {</b>
+<b class="nc">&nbsp;                parseTestSuite(doc.getChildNodes());</b>
+<b class="nc">&nbsp;                System.out.println(temp);</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;        } catch (ParserConfigurationException | SAXException | IOException e) {</b>
+<b class="nc">&nbsp;            e.printStackTrace();</b>
+&nbsp;        }
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void parseTestSuite(NodeList nodeList) {
+<b class="nc">&nbsp;        for (int count = 0; count &lt; nodeList.getLength(); count++) {</b>
+<b class="nc">&nbsp;            Node tempNode = nodeList.item(count);</b>
+<b class="nc">&nbsp;            if (tempNode.getNodeType() == Node.ELEMENT_NODE) {</b>
+<b class="nc">&nbsp;                if (tempNode.getNodeName().equals(&quot;TestSuite&quot;)) {</b>
+<b class="nc">&nbsp;                    parseUrl(tempNode.getChildNodes());</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private static void parseUrl(NodeList nodeList) {
+<b class="nc">&nbsp;        for (int count = 0; count &lt; nodeList.getLength(); count++) {</b>
+<b class="nc">&nbsp;            Node tempNode = nodeList.item(count);</b>
+<b class="nc">&nbsp;            if (tempNode.getNodeType() == Node.ELEMENT_NODE) {</b>
+<b class="nc">&nbsp;                if (tempNode.getNodeName().equals(&quot;url&quot;)) {</b>
+<b class="nc">&nbsp;                    temp.add(&quot;   Open Browser   &quot; + tempNode.getTextContent() + &quot;   Edge&quot;);</b>
+<b class="nc">&nbsp;                } else if (tempNode.getNodeName().equals(&quot;TestCase&quot;)) {</b>
+<b class="nc">&nbsp;                    parseTest(tempNode.getChildNodes());</b>
+<b class="nc">&nbsp;                    initInvalidDict();</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private static void parseTest(NodeList nodeList) {
+<b class="nc">&nbsp;        for (int count = 0; count &lt; nodeList.getLength(); count++) {</b>
+<b class="nc">&nbsp;            Node tempNode = nodeList.item(count);</b>
+<b class="nc">&nbsp;            if (tempNode.getNodeType() == Node.ELEMENT_NODE) {</b>
+<b class="nc">&nbsp;                if (tempNode.getNodeName().equals(&quot;Scenario&quot;)) {</b>
+<b class="nc">&nbsp;                    temp.add(0, &quot;Test-&quot; + tempNode.getTextContent());</b>
+<b class="nc">&nbsp;                } else if (tempNode.getNodeName().equals(&quot;LogicExpressionOfActions&quot;)) {</b>
+<b class="nc">&nbsp;                    exprToMap(logicExpr(tempNode.getChildNodes(), false));</b>
+<b class="nc">&nbsp;                    System.out.println(logicExpr(tempNode.getChildNodes(), false));</b>
+<b class="nc">&nbsp;                    System.out.println(exprEncode(logicExpr(tempNode.getChildNodes(), false)));</b>
+<b class="nc">&nbsp;                    Vector&lt;Vector&lt;String&gt;&gt; tb = truthTableParse(logicParse(exprEncode(logicExpr(tempNode.getChildNodes(), false))));</b>
+<b class="nc">&nbsp;                    lineDict.put(&quot;LINE&quot; + count, tb);</b>
+<b class="nc">&nbsp;                    templateGen(tb, count);</b>
+<b class="nc">&nbsp;                } else if (tempNode.getNodeName().equals(&quot;Validation&quot;)) {</b>
+<b class="nc">&nbsp;                    parseValidation(tempNode.getChildNodes());</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        System.out.println(lineDict);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private static void templateGen(Vector&lt;Vector&lt;String&gt;&gt; truthTable, int count) {
+<b class="nc">&nbsp;        for (String expr : truthTable.get(0)) {</b>
+<b class="nc">&nbsp;            if (expr.contains(&quot;it&quot;)) {</b>
+<b class="nc">&nbsp;                temp.add(&quot;#LINE&quot; + count + &quot;   &quot; + expr);</b>
+<b class="nc">&nbsp;            } else if (expr.contains(&quot;ce&quot;)) {</b>
+<b class="nc">&nbsp;                temp.add(&quot;#LINE&quot; + count + &quot;   &quot; + expr);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public static String exprEncode(String expr) {
+<b class="nc">&nbsp;        String encodedExpr = expr;</b>
+<b class="nc">&nbsp;        for (String key : inputTextMap.keySet()) {</b>
+<b class="nc">&nbsp;            encodedExpr = encodedExpr.replaceAll(inputTextMap.get(key).toString(), key);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        for (String key : clickElementMap.keySet()) {</b>
+<b class="nc">&nbsp;            encodedExpr = encodedExpr.replaceAll(clickElementMap.get(key).toString(), key);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return encodedExpr;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void exprToMap(String expr) {
+<b class="nc">&nbsp;        Vector&lt;String&gt; value = arrToVec(expr.split(&quot;\\||%26|%28|%29&quot;));</b>
+<b class="nc">&nbsp;        String[] removed = {&quot; &quot;, &quot;&quot;};</b>
+<b class="nc">&nbsp;        value.replaceAll(String::trim);</b>
+<b class="nc">&nbsp;        value.removeAll(List.of(removed));</b>
+<b class="nc">&nbsp;        System.out.println(value);</b>
+&nbsp;
+<b class="nc">&nbsp;        for (int i = 0; i &lt; value.size(); i++) {</b>
+<b class="nc">&nbsp;            if (value.get(i).contains(&quot;Input Text&quot;)) {</b>
+<b class="nc">&nbsp;                boolean isDup = false;</b>
+<b class="nc">&nbsp;                String[] component = value.get(i).split(&quot; {3}&quot;);</b>
+<b class="nc">&nbsp;                InputText it = new InputText(component[1], component[2]);</b>
+<b class="nc">&nbsp;                for (String key : inputTextMap.keySet()) {</b>
+<b class="nc">&nbsp;                    if (inputTextMap.get(key).equals(it)) {</b>
+<b class="nc">&nbsp;                        isDup = true;</b>
+<b class="nc">&nbsp;                        break;</b>
+&nbsp;                    }
+&nbsp;                }
+<b class="nc">&nbsp;                if (!isDup) {</b>
+<b class="nc">&nbsp;                    inputTextMap.put(&quot;it&quot; + (i + 1), it);</b>
+&nbsp;                }
+<b class="nc">&nbsp;            } else if (value.get(i).contains(&quot;Click Element&quot;)) {</b>
+<b class="nc">&nbsp;                boolean isDup = false;</b>
+<b class="nc">&nbsp;                String[] component = value.get(i).split(&quot; {3}&quot;);</b>
+<b class="nc">&nbsp;                ClickElement ce = new ClickElement(component[1]);</b>
+<b class="nc">&nbsp;                for (String key : clickElementMap.keySet()) {</b>
+<b class="nc">&nbsp;                    if (clickElementMap.get(key).equals(ce)) {</b>
+<b class="nc">&nbsp;                        isDup = true;</b>
+<b class="nc">&nbsp;                        break;</b>
+&nbsp;                    }
+&nbsp;                }
+<b class="nc">&nbsp;                if (!isDup) {</b>
+<b class="nc">&nbsp;                    clickElementMap.put(&quot;ce&quot; + (i + 1), ce);</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        for (Map.Entry&lt;String, InputText&gt; entry : inputTextMap.entrySet()) {</b>
+<b class="nc">&nbsp;            System.out.println(&quot;key &quot; + entry.getKey() + &quot; &quot; + entry.getValue().getLocator() + &#39; &#39; + entry.getValue().getValue());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        for (Map.Entry&lt;String, ClickElement&gt; entry : clickElementMap.entrySet()) {</b>
+<b class="nc">&nbsp;            System.out.println(&quot;key &quot; + entry.getKey() + &quot; &quot; + entry.getValue().getLocator());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private static void parseValidation(NodeList nodeList) {
+<b class="nc">&nbsp;        for (int count = 0; count &lt; nodeList.getLength(); count++) {</b>
+<b class="nc">&nbsp;            Node tempNode = nodeList.item(count);</b>
+<b class="nc">&nbsp;            if (tempNode.getNodeType() == Node.ELEMENT_NODE) {</b>
+<b class="nc">&nbsp;                if (tempNode.getNodeName().equals(&quot;url&quot;)) {</b>
+<b class="nc">&nbsp;                    temp.add(&quot;   Should Go To   &quot; + tempNode.getTextContent());</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private static String logicExpr(NodeList nodeList, boolean isChild) {
+<b class="nc">&nbsp;        String type = null;</b>
+<b class="nc">&nbsp;        String temp = &quot;&quot;;</b>
+<b class="nc">&nbsp;        for (int count = 0; count &lt; nodeList.getLength(); count++) {</b>
+<b class="nc">&nbsp;            Node tempNode = nodeList.item(count);</b>
+<b class="nc">&nbsp;            if (tempNode.getNodeType() == Node.ELEMENT_NODE) {</b>
+<b class="nc">&nbsp;                if (tempNode.getNodeName().equals(&quot;type&quot;)) {</b>
+<b class="nc">&nbsp;                    if (tempNode.getTextContent().equals(&quot;and&quot;)) {</b>
+<b class="nc">&nbsp;                        type = &quot;and&quot;;</b>
+<b class="nc">&nbsp;                    } else if (tempNode.getTextContent().equals(&quot;or&quot;)) {</b>
+<b class="nc">&nbsp;                        type = &quot;or&quot;;</b>
+<b class="nc">&nbsp;                    } else if (tempNode.getTextContent().equals(&quot;Input Text&quot;)) {</b>
+<b class="nc">&nbsp;                        type = &quot;Input Text&quot;;</b>
+<b class="nc">&nbsp;                    } else if (tempNode.getTextContent().equals(&quot;Click Element&quot;)) {</b>
+<b class="nc">&nbsp;                        type = &quot;Click Element&quot;;</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                } else if (tempNode.getNodeName().equals(&quot;LogicExpressionOfActions&quot;)) {</b>
+<b class="nc">&nbsp;                    String expr = logicExpr(tempNode.getChildNodes(), true);</b>
+<b class="nc">&nbsp;                    if (count == nodeList.getLength() - 2) {</b>
+<b class="nc">&nbsp;                        temp += expr;</b>
+<b class="nc">&nbsp;                    } else if (type.equals(&quot;and&quot;)) {</b>
+<b class="nc">&nbsp;                        temp += expr + &quot;%26&quot;;</b>
+<b class="nc">&nbsp;                    } else if (type.equals(&quot;or&quot;)) {</b>
+<b class="nc">&nbsp;                        temp += expr + &quot;|&quot;;</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                } else if (tempNode.getNodeName().equals(&quot;locator&quot;)) {</b>
+<b class="nc">&nbsp;                    if (type.equals(&quot;Input Text&quot;)) {</b>
+<b class="nc">&nbsp;                        temp += &quot;Input Text   &quot; + tempNode.getTextContent();</b>
+<b class="nc">&nbsp;                    } else if (type.equals(&quot;Click Element&quot;)) {</b>
+<b class="nc">&nbsp;                        return &quot;Click Element   &quot; + tempNode.getTextContent();</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                } else if (tempNode.getNodeName().equals(&quot;text&quot;)) {</b>
+<b class="nc">&nbsp;                    return temp + &quot;   &quot; + tempNode.getTextContent();</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        if (isChild &amp;&amp; (type.equals(&quot;and&quot;) || type.equals(&quot;or&quot;))) {</b>
+<b class="nc">&nbsp;            return &quot;%28&quot; + temp + &quot;%29&quot;;</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            return temp;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public static Vector&lt;Vector&lt;String&gt;&gt; truthTableParse(String expr) {
+<b class="fc">&nbsp;        String headerString = null;</b>
+<b class="fc">&nbsp;        expr = expr.replaceAll(&quot;\\s+&quot;, &quot; &quot;);</b>
+<b class="fc">&nbsp;        Pattern bodyPattern = Pattern.compile(&quot; [0|1]&quot;);</b>
+<b class="fc">&nbsp;        Matcher bodyMatcher = bodyPattern.matcher(expr);</b>
+<b class="fc">&nbsp;        if (bodyMatcher.find()) {</b>
+<b class="fc">&nbsp;            headerString = expr.substring(0, bodyMatcher.start());</b>
+<b class="fc">&nbsp;            expr = &quot;0 &quot; + expr.substring(bodyMatcher.start() + 1);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        Vector&lt;Vector&lt;String&gt;&gt; tb = new Vector&lt;&gt;();</b>
+<b class="fc">&nbsp;        Vector&lt;String&gt; vector = arrToVec(expr.split(&quot; : &quot;));</b>
+<b class="fc">&nbsp;        Vector&lt;String&gt; header = new Vector&lt;&gt;();</b>
+<b class="fc">&nbsp;        for (int i = 0; i &lt; vector.size() - 1; i++) {</b>
+<b class="fc">&nbsp;            vector.set(i, vector.get(i).substring(2) + &quot; &quot; + vector.get(i + 1).charAt(0));</b>
+&nbsp;        }
+<b class="fc">&nbsp;        vector.remove(vector.size() - 1);</b>
+&nbsp;
+<b class="fc">&nbsp;        Pattern headerPattern = Pattern.compile(&quot;[a-zA-Z]+[1-9]&quot;);</b>
+<b class="fc">&nbsp;        assert headerString != null;</b>
+<b class="fc">&nbsp;        Matcher headerMatcher = headerPattern.matcher(headerString);</b>
+<b class="fc">&nbsp;        while (headerMatcher.find()) {</b>
+<b class="fc">&nbsp;            header.add(headerMatcher.group());</b>
+&nbsp;        }
+<b class="fc">&nbsp;        tb.add(header);</b>
+<b class="fc">&nbsp;        tb.add(vector);</b>
+<b class="fc">&nbsp;        return tb;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static Vector&lt;String&gt; arrToVec(String[] arr) {
+<b class="fc">&nbsp;        return new Vector&lt;&gt;(Arrays.asList(arr));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static void initInvalidDict() {
+<b class="fc">&nbsp;        String expr = &quot;&quot;;</b>
+<b class="fc">&nbsp;        Enumeration&lt;String&gt; enumeration = lineDict.keys();</b>
+<b class="fc">&nbsp;        while (enumeration.hasMoreElements()) {</b>
+<b class="fc">&nbsp;            expr += enumeration.nextElement() + &quot;%26&quot;;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        expr = expr.substring(0, expr.length() - 3);</b>
+<b class="fc">&nbsp;        invalidDict = truthTableParse(logicParse(expr));</b>
+<b class="fc">&nbsp;        System.out.println(invalidDict);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static Map&lt;String, List&lt;String&gt;&gt; createDataMap(String path) {
+<b class="fc">&nbsp;        Map&lt;String, List&lt;String&gt;&gt; variables = new HashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;        try (CSVReader csvReader = new CSVReader(new FileReader(path))) {</b>
+<b class="fc">&nbsp;            String[] words = null;</b>
+<b class="fc">&nbsp;            while ((words = csvReader.readNext()) != null) {</b>
+<b class="fc">&nbsp;                variables.put(words[0], new ArrayList&lt;&gt;());</b>
+<b class="fc">&nbsp;                for (int i = 1; i &lt; words.length; i++) {</b>
+<b class="fc">&nbsp;                    variables.get(words[0]).add(words[i]);</b>
+&nbsp;                }
+&nbsp;            }
+<b class="fc">&nbsp;            return variables;</b>
+<b class="fc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            e.printStackTrace();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return variables;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-11-16 14:19</div>
+</div>
+</body>
+</html>
