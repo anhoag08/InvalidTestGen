@@ -45,6 +45,9 @@ public class ReadXmlDomParserLoop {
             if (doc.hasChildNodes()) {
                 parseTestSuite(doc.getChildNodes());
                 System.out.println(temp);
+                System.out.println(invalidDict);
+                System.out.println(lineDict);
+                invalidTestCaseGen();
             }
 
         } catch (ParserConfigurationException | SAXException | IOException e) {
@@ -86,8 +89,6 @@ public class ReadXmlDomParserLoop {
                     temp.add(0, "Test-" + tempNode.getTextContent());
                 } else if (tempNode.getNodeName().equals("LogicExpressionOfActions")) {
                     exprToMap(logicExpr(tempNode.getChildNodes(), false));
-                    System.out.println(logicExpr(tempNode.getChildNodes(), false));
-                    System.out.println(exprEncode(logicExpr(tempNode.getChildNodes(), false)));
                     Vector<Vector<String>> tb = truthTableParse(logicParse(exprEncode(logicExpr(tempNode.getChildNodes(), false))));
                     lineDict.put("LINE" + count, tb);
                     templateGen(tb, count);
@@ -96,7 +97,7 @@ public class ReadXmlDomParserLoop {
                 }
             }
         }
-        System.out.println(lineDict);
+//        System.out.println(lineDict);
     }
 
     public static void templateGen(Vector<Vector<String>> truthTable, int count) {
@@ -126,7 +127,6 @@ public class ReadXmlDomParserLoop {
         String[] removed = {" ", ""};
         value.replaceAll(String::trim);
         value.removeAll(List.of(removed));
-        System.out.println(value);
 
         for (int i = 0; i < value.size(); i++) {
             if (value.get(i).contains("Input Text")) {
@@ -156,12 +156,6 @@ public class ReadXmlDomParserLoop {
                     clickElementMap.put("ce" + (i + 1), ce);
                 }
             }
-        }
-        for (Map.Entry<String, InputText> entry : inputTextMap.entrySet()) {
-            System.out.println("key " + entry.getKey() + " " + entry.getValue().getLocator() + ' ' + entry.getValue().getValue());
-        }
-        for (Map.Entry<String, ClickElement> entry : clickElementMap.entrySet()) {
-            System.out.println("key " + entry.getKey() + " " + entry.getValue().getLocator());
         }
     }
 
@@ -230,6 +224,8 @@ public class ReadXmlDomParserLoop {
         }
         Vector<Vector<String>> tb = new Vector<>();
         Vector<String> vector = arrToVec(expr.split(" : "));
+        Vector<String> validVector = new Vector<>();
+        Vector<String> invalidVector = new Vector<>();
         Vector<String> header = new Vector<>();
         for (int i = 0; i < vector.size() - 1; i++) {
             vector.set(i, vector.get(i).substring(2) + " " + vector.get(i + 1).charAt(0));
@@ -242,8 +238,16 @@ public class ReadXmlDomParserLoop {
         while (headerMatcher.find()) {
             header.add(headerMatcher.group());
         }
+        for (String tbLine : vector) {
+            if (tbLine.charAt(tbLine.length() - 1) == '0') {
+                invalidVector.add(tbLine);
+            } else {
+                validVector.add(tbLine);
+            }
+        }
         tb.add(header);
-        tb.add(vector);
+        tb.add(validVector);
+        tb.add(invalidVector);
         return tb;
     }
 
@@ -259,7 +263,7 @@ public class ReadXmlDomParserLoop {
         }
         expr = expr.substring(0, expr.length() - 3);
         invalidDict = truthTableParse(logicParse(expr));
-        System.out.println(invalidDict);
+//        System.out.println(invalidDict);
     }
 
     public static Map<String, List<String>> createDataMap(String path) {
@@ -277,5 +281,53 @@ public class ReadXmlDomParserLoop {
             e.printStackTrace();
         }
         return variables;
+    }
+
+    public static void invalidTestCaseGen() {
+        for (String lineString : invalidDict.get(2)) {
+            Vector<String> lineVec = arrToVec(lineString.split(" "));
+            for (int i = 0; i < invalidDict.get(0).size(); i++) {
+                System.out.println(invalidDict.get(0).get(i) + "  " + lineVec.get(i));
+                invalidLineParse(invalidDict.get(0).get(i), lineVec.get(i));
+            }
+        }
+    }
+
+    public static void invalidLineParse(String line, String value) {
+        if (value.equals("0")) {
+            for (String valueLine : lineDict.get(line).get(2)) {
+                String header = getHeader(lineDict.get(line).get(0), valueLine);
+                Vector<String> valueVector = arrToVec(valueLine.split(" "));
+                for (int i = 0; i < lineDict.get(line).get(0).size(); i++) {
+                    invalidExprParse(line, lineDict.get(line).get(0).get(i), valueVector.get(i), header);
+                }
+            }
+        } else {
+            for (String valueLine : lineDict.get(line).get(1)) {
+                String header = getHeader(lineDict.get(line).get(0), valueLine);
+                Vector<String> valueVector = arrToVec(valueLine.split(" "));
+                for (int i = 0; i < lineDict.get(line).get(0).size(); i++) {
+                    invalidExprParse(line, lineDict.get(line).get(0).get(i), valueVector.get(i), header);
+                }
+            }
+        }
+    }
+
+    public static void invalidExprParse(String line, String expr, String value, String header) {
+        System.out.println(line + " " + expr + header +  " " + value);
+    }
+
+    public static String getHeader(Vector<String> header, String value) {
+        String logicHeader = "";
+        Vector<String> valueVec = arrToVec(value.split(" "));
+        for (int i = 0; i < header.size(); i++) {
+            if (valueVec.get(i).equals("1")) {
+                logicHeader += header.get(i) + ", ";
+            }
+        }
+        if (!logicHeader.isEmpty()) {
+            logicHeader = '[' + logicHeader.substring(0, logicHeader.length() - 2) + ']';
+        }
+        return logicHeader;
     }
 }

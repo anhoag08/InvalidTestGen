@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Parallel Suite" parallel="methods" thread-count="3">
+<suite name="Parallel Suite" parallel="methods" thread-count="1">
     <test verbose="2" preserve-order="true" name="Parameters Test 1">
-        <parameter name="weight" value="1"/>
-        <parameter name="name" value="Heo"/>
+        <parameter name="param1" value="test1"/>
+        <parameter name="param2" value="1"/>
         <classes>
-            <class name="org.example.DataDriveTestingDemo">
+            <class name="org.example.DataDriveTesting">
                 <methods>
                     <include name="testWithParameters"/>
                 </methods>
@@ -13,10 +13,10 @@
         </classes>
     </test>
     <test verbose="2" preserve-order="true" name="Parameters Test 2">
-        <parameter name="weight" value="1"/>
-        <parameter name="name" value="Cho"/>
+        <parameter name="param1" value="test2"/>
+        <parameter name="param2" value="2"/>
         <classes>
-            <class name="org.example.DataDriveTestingDemo">
+            <class name="org.example.DataDriveTesting">
                 <methods>
                     <include name="testWithParameters"/>
                 </methods>
@@ -25,7 +25,7 @@
     </test>
     <test verbose="2" preserve-order="true" name="DataProviderTest">
         <classes>
-            <class name="org.example.DataDriveTestingDemo">
+            <class name="org.example.DataDriveTesting">
                 <methods>
                     <include name="testWithData"/>
                 </methods>

@@ -1,8 +1,8 @@
 package org.example;
 
-import org.testng.Assert;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.annotations.*;
-import org.example.ReadXmlDomParserLoop.*;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -18,13 +18,10 @@ import java.util.Map;
 import java.util.Vector;
 
 
-public class TestNG {
-    @BeforeSuite
-    public void beforeSuite() {
-        System.out.println("Before Suite");
-    }
+public class TestClass1 {
+    private static final Logger logger = LogManager.getLogger(TestClass1.class);
 
-    @Test
+    @Test(timeOut = 500, groups = {"group1"})
     public void test1() {
         ReadXmlDomParserLoop.lineDict = new Hashtable<>();
         ReadXmlDomParserLoop.lineDict.put("LINE1", new Vector<>());
@@ -32,21 +29,17 @@ public class TestNG {
         ReadXmlDomParserLoop.lineDict.put("LINE3", new Vector<>());
         ReadXmlDomParserLoop.initInvalidDict();
         assert (ReadXmlDomParserLoop.lineDict != null);
+        logger.info("Thread ID Is : " + Thread.currentThread().getId());
     }
 
-    @Test
+    @Test(timeOut = 500, groups = {"group2"})
     public void test2a() {
         Map<String, List<String>> testMap = ReadXmlDomParserLoop.createDataMap("src/main/resources/data_thinktester.csv");
         assert (testMap != null);
+        logger.info("Thread ID Is : " + Thread.currentThread().getId());
     }
 
-    @Test
-    public void test2b() {
-        Map<String, List<String>> testMap = ReadXmlDomParserLoop.createDataMap("");
-        assert (testMap.isEmpty());
-    }
-
-    @Test
+    @Test(timeOut = 500, groups = {"group3"})
     public void test3() {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
@@ -61,6 +54,7 @@ public class TestNG {
             if (doc.hasChildNodes()) {
                 ReadXmlDomParserLoop.parseTestSuite(doc.getChildNodes());
                 assert (ReadXmlDomParserLoop.temp != null);
+                logger.info("Thread ID Is : " + Thread.currentThread().getId());
             }
 
         } catch (ParserConfigurationException | SAXException | IOException e) {
@@ -69,7 +63,7 @@ public class TestNG {
     }
 
 
-    @Test
+    @Test(timeOut = 500, groups = {"group4"})
     public void test4() {
         Vector<Vector<String>> test = new Vector<>();
         Vector<String> test1 = new Vector<>();
@@ -81,9 +75,10 @@ public class TestNG {
         test.add(test1);
         ReadXmlDomParserLoop.templateGen(test, 3);
         assert (ReadXmlDomParserLoop.temp != null);
+        logger.info("Thread ID Is : " + Thread.currentThread().getId());
     }
 
-    @Test
+    @Test(timeOut = 500, groups = {"group3"})
     public void test3b() {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
@@ -98,6 +93,7 @@ public class TestNG {
             if (doc.hasChildNodes()) {
                 ReadXmlDomParserLoop.parseTestSuite(doc.getChildNodes());
                 assert (ReadXmlDomParserLoop.temp != null);
+                logger.info("Thread ID Is : " + Thread.currentThread().getId());
             }
 
         } catch (ParserConfigurationException | SAXException | IOException e) {

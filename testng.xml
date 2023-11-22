@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="All Test Suite">
-    <test verbose="2" preserve-order="true" name="C:/Users/Lenovo/Desktop/CODE PROJECTS/InvalidTest">
-        <classes/>
+<suite name="TestNG Suite" parallel="methods" thread-count="5" >
+    <test name="Test1 test" group-by-instances="true">
+        <groups>
+            <run>
+<!--                <include name="group3"/>-->
+<!--                <exclude name="group3" />-->
+            </run>
+        </groups>
+        <classes>
+            <class name="org.example.TestClass1" />
+            <class name="org.example.TestClass2" />
+        </classes>
     </test>
 </suite>

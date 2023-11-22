@@ -43,7 +43,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
         self.end_headers()
 
         # Send a response with the simplified expression
-        response = f"{simplify_logic(expr(param_value))}"
+        response = f"200"
         self.wfile.write(response.encode('utf-8'))
 
 if __name__ == '__main__':

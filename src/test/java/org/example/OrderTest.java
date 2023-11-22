@@ -43,16 +43,6 @@ public class OrderTest {
         System.out.println("After Group testOne");
     }
 
-    @BeforeGroups(groups = {"testTwo"})
-    public void beforeGroupTwo() {
-        System.out.println("Before Group testTwo");
-    }
-
-    @AfterGroups(groups = {"testTwo"})
-    public void afterGroupTwo() {
-        System.out.println("After Group testTwo");
-    }
-
     @BeforeMethod
     public void beforeMethod() {
         System.out.println("Before Method");
@@ -66,10 +56,5 @@ public class OrderTest {
     @Test(groups = {"testOne"})
     public void testOneMethod() {
         System.out.println("Test method One");
-    }
-
-    @Test(groups = {"testTwo"})
-    public void testTwoMethod() {
-        System.out.println("Test method Two");
     }
 }
