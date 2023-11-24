@@ -10,6 +10,12 @@ public class InputText extends Expression{
         this.value = value;
     }
 
+    public InputText(InputText inputText) {
+        super(inputText.getLocator());
+        this.value = inputText.getValue();
+        this.size = inputText.getSize();
+    }
+
     public String getValue() {
         return value;
     }

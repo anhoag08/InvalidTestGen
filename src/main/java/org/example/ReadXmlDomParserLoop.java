@@ -2,7 +2,6 @@ package org.example;
 
 import com.opencsv.CSVReader;
 import org.example.objects.ClickElement;
-import org.example.objects.Expression;
 import org.example.objects.InputText;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
@@ -27,9 +26,11 @@ public class ReadXmlDomParserLoop {
 
     static HashMap<String, InputText> inputTextMap = new HashMap<>();
     static HashMap<String, ClickElement> clickElementMap = new HashMap<>();
+    static Map<String, List<String>> valueMap = new HashMap<>();
 
     public static void main(String[] args) {
-        System.out.println(createDataMap("src/main/resources/data_thinktester.csv"));
+        valueMap = createDataMap("src/main/resources/data_thinktester.csv");
+        System.out.println(valueMap);
 
         // Instantiate the Factory
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -47,6 +48,8 @@ public class ReadXmlDomParserLoop {
                 System.out.println(temp);
                 System.out.println(invalidDict);
                 System.out.println(lineDict);
+                System.out.println(inputTextMap);
+                System.out.println(clickElementMap);
                 invalidTestCaseGen();
             }
 
@@ -127,6 +130,7 @@ public class ReadXmlDomParserLoop {
         String[] removed = {" ", ""};
         value.replaceAll(String::trim);
         value.removeAll(List.of(removed));
+        System.out.println(value);
 
         for (int i = 0; i < value.size(); i++) {
             if (value.get(i).contains("Input Text")) {
@@ -140,7 +144,7 @@ public class ReadXmlDomParserLoop {
                     }
                 }
                 if (!isDup) {
-                    inputTextMap.put("it" + (i + 1), it);
+                    inputTextMap.put("it" + (inputTextMap.keySet().size() + 1), it);
                 }
             } else if (value.get(i).contains("Click Element")) {
                 boolean isDup = false;
@@ -153,7 +157,7 @@ public class ReadXmlDomParserLoop {
                     }
                 }
                 if (!isDup) {
-                    clickElementMap.put("ce" + (i + 1), ce);
+                    clickElementMap.put("ce" + (clickElementMap.keySet().size() + 1), ce);
                 }
             }
         }
@@ -284,37 +288,89 @@ public class ReadXmlDomParserLoop {
     }
 
     public static void invalidTestCaseGen() {
+        Vector<String> finalTest = new Vector<>();
         for (String lineString : invalidDict.get(2)) {
             Vector<String> lineVec = arrToVec(lineString.split(" "));
+            Vector<String> lineTemp = new Vector<>(temp);
             for (int i = 0; i < invalidDict.get(0).size(); i++) {
-                System.out.println(invalidDict.get(0).get(i) + "  " + lineVec.get(i));
-                invalidLineParse(invalidDict.get(0).get(i), lineVec.get(i));
+                lineTemp = invalidLineParse(invalidDict.get(0).get(i), lineVec.get(i), lineTemp);
+            }
+            finalTest.addAll(lineTemp);
+        }
+        int count = 1;
+        for (int i = 0; i < finalTest.size(); i++) {
+            if (finalTest.get(i).contains("Test-")) {
+                finalTest.set(i, finalTest.get(i) + "-" + count);
+                count++;
             }
         }
+        System.out.println(finalTest);
     }
 
-    public static void invalidLineParse(String line, String value) {
+    public static Vector<String> invalidLineParse(String line, String value, Vector<String> lineTemp) {
+        Vector<String> tempTemplate = new Vector<>();
         if (value.equals("0")) {
             for (String valueLine : lineDict.get(line).get(2)) {
+                Vector<String> exprTemp = new Vector<>(lineTemp);
                 String header = getHeader(lineDict.get(line).get(0), valueLine);
                 Vector<String> valueVector = arrToVec(valueLine.split(" "));
                 for (int i = 0; i < lineDict.get(line).get(0).size(); i++) {
-                    invalidExprParse(line, lineDict.get(line).get(0).get(i), valueVector.get(i), header);
+                    invalidExprParse(line, lineDict.get(line).get(0).get(i), valueVector.get(i), header, exprTemp);
                 }
+                tempTemplate.addAll(exprTemp);
             }
         } else {
             for (String valueLine : lineDict.get(line).get(1)) {
+                Vector<String> exprTemp = new Vector<>(lineTemp);
                 String header = getHeader(lineDict.get(line).get(0), valueLine);
                 Vector<String> valueVector = arrToVec(valueLine.split(" "));
                 for (int i = 0; i < lineDict.get(line).get(0).size(); i++) {
-                    invalidExprParse(line, lineDict.get(line).get(0).get(i), valueVector.get(i), header);
+                    invalidExprParse(line, lineDict.get(line).get(0).get(i), valueVector.get(i), header, exprTemp);
+                }
+                tempTemplate.addAll(exprTemp);
+            }
+        }
+        return tempTemplate;
+    }
+
+    public static void invalidExprParse(String line, String expr, String value, String header, Vector<String> exprTemp) {
+        Vector<String> tempTemplate = new Vector<>();
+        for (int i = 0; i < exprTemp.size(); i++) {
+            if (exprTemp.get(i).contains(line) && exprTemp.get(i).contains(expr)) {
+                Vector<String> tempExprTemplate = new Vector<>(exprTemp);
+                if (value.equals("1")) {
+                    if (expr.contains("it")) {
+                        if(header.isEmpty()) {
+                            InputText singleValidIt = new InputText(inputTextMap.get(expr));
+                            singleValidIt.setLocator(valueMap.get(singleValidIt.getLocator()).get(0));
+                            for(String exprValue : valueMap.get(inputTextMap.get(expr).getValue())) {
+                                singleValidIt.setValue(exprValue);
+                                tempExprTemplate.set(i, singleValidIt.toString());
+                                tempTemplate.addAll(tempExprTemplate);
+                            }
+                        } else {
+                            System.out.println(header);
+                        }
+                    } else if (expr.contains("ce")) {
+                        if(header.isEmpty()) {
+                            ClickElement singleValidCe = new ClickElement(clickElementMap.get(expr));
+                        } else {
+                        }
+                    }
+                } else {
+                    if (expr.contains("it")) {
+                        InputText invalidIt = new InputText(inputTextMap.get(expr));
+                        invalidIt.setValue("${EMPTY}");
+                        exprTemp.set(i, invalidIt.toString());
+                    } else if (expr.contains("ce")) {
+                        ClickElement invalidCe = new ClickElement(clickElementMap.get(expr));
+                        invalidCe.setLocator("${EMPTY}");
+                        exprTemp.set(i, invalidCe.toString());
+                    }
                 }
             }
         }
-    }
-
-    public static void invalidExprParse(String line, String expr, String value, String header) {
-        System.out.println(line + " " + expr + header +  " " + value);
+        System.out.println(tempTemplate);
     }
 
     public static String getHeader(Vector<String> header, String value) {
@@ -325,8 +381,10 @@ public class ReadXmlDomParserLoop {
                 logicHeader += header.get(i) + ", ";
             }
         }
-        if (!logicHeader.isEmpty()) {
+        if (logicHeader.trim().contains(", ")) {
             logicHeader = '[' + logicHeader.substring(0, logicHeader.length() - 2) + ']';
+        } else {
+            logicHeader = "";
         }
         return logicHeader;
     }

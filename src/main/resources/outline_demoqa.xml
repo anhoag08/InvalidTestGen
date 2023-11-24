@@ -5,70 +5,26 @@
         <LogicExpressionOfActions>
             <type>and</type>
             <LogicExpressionOfActions>
-                <type>or</type>
-                <LogicExpressionOfActions>
-                    <type>Input Text</type>
-                    <locator>a</locator>
-                    <text>A</text>
-                </LogicExpressionOfActions>
-                <LogicExpressionOfActions>
-                    <type>Input Text</type>
-                    <locator>a</locator>
-                    <text>A</text>
-                </LogicExpressionOfActions>
-                <LogicExpressionOfActions>
-                    <type>Input Text</type>
-                    <locator>b</locator>
-                    <text>B</text>
-                </LogicExpressionOfActions>
-                <LogicExpressionOfActions>
-                    <type>and</type>
-                    <LogicExpressionOfActions>
-                        <type>Input Text</type>
-                        <locator>b</locator>
-                        <text>B</text>
-                    </LogicExpressionOfActions>
-                    <LogicExpressionOfActions>
-                        <type>Input Text</type>
-                        <locator>b</locator>
-                        <text>B</text>
-                    </LogicExpressionOfActions>
-                </LogicExpressionOfActions>
+                <type>Input Text</type>
+                <locator>loc_a</locator>
+                <text>a</text>
             </LogicExpressionOfActions>
             <LogicExpressionOfActions>
                 <type>Click Element</type>
-                <locator>c</locator>
+                <locator>loc_b</locator>
             </LogicExpressionOfActions>
         </LogicExpressionOfActions>
         <LogicExpressionOfActions>
             <type>or</type>
             <LogicExpressionOfActions>
                 <type>Input Text</type>
-                <locator>a</locator>
-                <text>A</text>
+                <locator>loc_c</locator>
+                <text>c</text>
             </LogicExpressionOfActions>
             <LogicExpressionOfActions>
                 <type>Input Text</type>
-                <locator>a</locator>
-                <text>A</text>
-            </LogicExpressionOfActions>
-            <LogicExpressionOfActions>
-                <type>Input Text</type>
-                <locator>b</locator>
-                <text>B</text>
-            </LogicExpressionOfActions>
-            <LogicExpressionOfActions>
-                <type>and</type>
-                <LogicExpressionOfActions>
-                    <type>Input Text</type>
-                    <locator>b</locator>
-                    <text>B</text>
-                </LogicExpressionOfActions>
-                <LogicExpressionOfActions>
-                    <type>Input Text</type>
-                    <locator>d</locator>
-                    <text>D</text>
-                </LogicExpressionOfActions>
+                <locator>loc_d</locator>
+                <text>d</text>
             </LogicExpressionOfActions>
         </LogicExpressionOfActions>
         <Validation>

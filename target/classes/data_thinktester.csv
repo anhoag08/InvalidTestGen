@@ -1,5 +1,5 @@
 a,a1,a2,a3,a4
-b,b1,b2,b3,b4
+,,,,
 c,c1,c2,c3,c4
 d,d1,d2,d3,d4
 e,e1,e2,,
@@ -18,3 +18,8 @@ log_h,xpath=//input[@id='birthdate'],,,
 log_i,xpath=//input[@id='street1' and @placeholder='Address 1'],,,
 log_k,xpath=//input[@id='street2' and @placeholder='Address 2'],,,
 log_m,xpath=//button[@id='submit' and @type='submit' and normalize-space()='Submit'],,,
+a & b,a1,a2,a3,
+c & d,c1 & d1,c2 & d2,c3 & d3,
+a & b & c,,,,
+loc_a & b & c,,,,
+b & c,,,,

@@ -6,6 +6,10 @@ public class ClickElement extends Expression{
         super(locator);
     }
 
+    public ClickElement(ClickElement clickElement) {
+        super(clickElement.getLocator());
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
