@@ -15,12 +15,4 @@ public class Expression {
     public void setLocator(String locator) {
         this.locator = locator;
     }
-
-    public String getLocatorValue() {
-        return locatorValue;
-    }
-
-    public void setLocatorValue(String locatorValue) {
-        this.locatorValue = locatorValue;
-    }
 }
