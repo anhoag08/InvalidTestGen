@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class JavaHttpClient {
+public class PythonTruthTableServer {
     public static String logicParse(String expr) {
         StringBuilder response = new StringBuilder();
         try {

@@ -16,8 +16,8 @@
         </LogicExpressionOfActions>
         <LogicExpressionOfActions>
             <type>Input Text</type>
-            <locator>loc_c</locator>
-            <text>c</text>
+            <locator>loc_a</locator>
+            <text>a</text>
         </LogicExpressionOfActions>
         <Validation>
             <type>URLValidation</type>

@@ -4,10 +4,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 import java.util.Vector;
 
-public class FileWriteExample {
+public class FileWriteModule {
 
     public static void writeStringsToFile(Vector<String> strings, String filePath) {
         try {

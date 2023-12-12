@@ -1,0 +1,4 @@
+password_saucedemo & username_saucedemo,user1 & pass1,user2 & pass2,user3 & pass3
+passWord,xpath=//input[@placeholder='Password' and @type='password' and @data-test='password' and @id='password' and @name='password']
+userName,xpath=//input[@placeholder='Username' and @data-test='username' and @id='user-name' and @name='user-name']
+loginButton,xpath=//input[@class='submit-button btn_action' and @data-test='login-button' and @id='login-button' and @name='login-button' and @value='Login']

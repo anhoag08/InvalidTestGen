@@ -6,33 +6,12 @@
             <type>and</type>
             <LogicExpressionOfActions>
                 <type>Input Text</type>
-                <locator>loc_c</locator>
-                <text>c</text>
-            </LogicExpressionOfActions>
-            <LogicExpressionOfActions>
-                <type>or</type>
-                <LogicExpressionOfActions>
-                    <type>Input Text</type>
-                    <locator>loc_a</locator>
-                    <text>a</text>
-                </LogicExpressionOfActions>
-                <LogicExpressionOfActions>
-                    <type>Click Element</type>
-                    <locator>loc_b</locator>
-                </LogicExpressionOfActions>
-            </LogicExpressionOfActions>
-        </LogicExpressionOfActions>
-        <LogicExpressionOfActions>
-            <type>and</type>
-            <LogicExpressionOfActions>
-                <type>Input Text</type>
                 <locator>loc_a</locator>
                 <text>a</text>
             </LogicExpressionOfActions>
             <LogicExpressionOfActions>
-                <type>Input Text</type>
-                <locator>loc_c</locator>
-                <text>c</text>
+                <type>Click Element</type>
+                <locator>loc_b</locator>
             </LogicExpressionOfActions>
         </LogicExpressionOfActions>
         <Validation>

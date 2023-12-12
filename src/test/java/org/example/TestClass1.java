@@ -23,18 +23,18 @@ public class TestClass1 {
 
     @Test(timeOut = 500, groups = {"group1"})
     public void test1() {
-        ReadXmlDomParserLoop.lineDict = new Hashtable<>();
-        ReadXmlDomParserLoop.lineDict.put("LINE1", new Vector<>());
-        ReadXmlDomParserLoop.lineDict.put("LINE2", new Vector<>());
-        ReadXmlDomParserLoop.lineDict.put("LINE3", new Vector<>());
-        ReadXmlDomParserLoop.initInvalidDict();
-        assert (ReadXmlDomParserLoop.lineDict != null);
+        DataPreprocessing.lineDict = new Hashtable<>();
+        DataPreprocessing.lineDict.put("LINE1", new Vector<>());
+        DataPreprocessing.lineDict.put("LINE2", new Vector<>());
+        DataPreprocessing.lineDict.put("LINE3", new Vector<>());
+        DataPreprocessing.initInvalidDict();
+        assert (DataPreprocessing.lineDict != null);
         logger.info("Thread ID Is : " + Thread.currentThread().getId());
     }
 
     @Test(timeOut = 500, groups = {"group2"})
     public void test2a() {
-        Map<String, List<String>> testMap = ReadXmlDomParserLoop.createDataMap("src/main/resources/data_thinktester.csv");
+        Map<String, List<String>> testMap = DataPreprocessing.createDataMap("src/main/resources/data_thinktester.csv");
         assert (testMap != null);
         logger.info("Thread ID Is : " + Thread.currentThread().getId());
     }
@@ -52,8 +52,8 @@ public class TestClass1 {
             Document doc = db.parse(is);
 
             if (doc.hasChildNodes()) {
-                ReadXmlDomParserLoop.parseTestSuite(doc.getChildNodes());
-                assert (ReadXmlDomParserLoop.temp != null);
+                DataPreprocessing.parseTestSuite(doc.getChildNodes());
+                assert (DataPreprocessing.temp != null);
                 logger.info("Thread ID Is : " + Thread.currentThread().getId());
             }
 
@@ -73,8 +73,8 @@ public class TestClass1 {
         test1.add("ce4");
         test1.add("ce5");
         test.add(test1);
-        ReadXmlDomParserLoop.templateGen(test, 3);
-        assert (ReadXmlDomParserLoop.temp != null);
+        DataPreprocessing.templateGen(test, 3);
+        assert (DataPreprocessing.temp != null);
         logger.info("Thread ID Is : " + Thread.currentThread().getId());
     }
 
@@ -91,8 +91,8 @@ public class TestClass1 {
             Document doc = db.parse(is);
 
             if (doc.hasChildNodes()) {
-                ReadXmlDomParserLoop.parseTestSuite(doc.getChildNodes());
-                assert (ReadXmlDomParserLoop.temp != null);
+                DataPreprocessing.parseTestSuite(doc.getChildNodes());
+                assert (DataPreprocessing.temp != null);
                 logger.info("Thread ID Is : " + Thread.currentThread().getId());
             }
 
